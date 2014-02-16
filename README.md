@@ -12,7 +12,7 @@ better screenshots.
   1. Download [node-webkit](https://github.com/rogerwang/node-webkit)
   2. Put it in `PATH`
 
-## Running the `screenshot-service`
+## Running
 
   1. `git clone https://github.com/fweinb/screenshot-service && cd screenshot-service`
   2. Run `nodewebkit .` in the `screenshot-service` folder
@@ -20,10 +20,10 @@ better screenshots.
 
 ## Configurate
 
-This project is using [node-config](https://github.com/lorenwest/node-config) so you can find the config [here](/config/config.yaml)
+This project is using [node-config](https://github.com/lorenwest/node-config) so you can find the config [here](/config/default.yaml)
 
 
-## Using headless `node-webkit` via `xvfb`
+## Using headless node-webkit via xvfb
 
 DISCLAIMER: For WebGL/3D CSS support you need hardware acceleration. Keep that in mind!
 
@@ -39,8 +39,8 @@ DISCLAIMER: For WebGL/3D CSS support you need hardware acceleration. Keep that i
   3. Install fonts `sudo apt-get install xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic`
   4. Install ttf fonts `sudo apt-get install -y x-ttcidfont-conf cabextract ttf-mscorefonts-installer` (Accept the EULA)
   5. Reconfigure fonts `sudo dpkg-reconfigure --default-priority x-ttcidfont-conf` (This fixed an issue for me)
-  6. Start xvfb `xvfb :99 &` on display :99
-  7. Make :99 default display `export DISPLAY=:99`
+  6. Start xvfb on display :99  `xvfb :99 &`
+  7. Make :99 the default display `export DISPLAY=:99`
 
 ### Installing node-webkit and screenshot-service
 
