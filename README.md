@@ -19,7 +19,28 @@ better screenshots.
   3. Run `nodewebkit .` in the `screenshot-service` folder
   4. Open `http://localhost:8080/?url=http://s.codepen.io/FWeinb/fullpage/oyACz`
 
-## Configurate
+## API Usage
+
+  # Take a screenshot
+  GET /?url=www.google.com
+  # Return a 1024x600 PNG screenshot of the www.google.com homepage
+
+  # Custom viewport size
+  GET /?url=www.google.com&width=800&height=600
+  # Return a 800x600 PNG screenshot of the www.google.com homepage
+
+  # Asynchronous call
+  GET /?url=www.google.com&callback=http://www.myservice.com/screenshot/google
+  # Return an empty response immediately (HTTP 200 OK),
+  # then send a POST request to the callback URL when the screenshot is ready
+  # with the PNG image in the body.
+
+  # Screenshot delay
+  GET /?url=www.google.com&delay=1000
+  # Return a 1024x600 PNG screenshot of the www.google.com homepage
+  # 1 second after it's loaded
+
+## Configuration
 
 This project is using [node-config](https://github.com/lorenwest/node-config) so you can find the config [here](/config/default.yaml)
 
