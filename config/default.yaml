@@ -1,0 +1,15 @@
+screenshot:
+  width: 1024
+  maxwidth: 3000
+  height: 600
+  maxheight: 3000
+  format: "png" # png or jpeg
+  delay: 0
+  maxdelay: 10000
+  timeout: 10000 # Time in ms, maximal time to wait until the page is fully loaded
+cacheService:
+  folder: "tmp"
+  ttl: 60000 # Time in ms 0 means cache forever
+server:
+  port: 8080
+  cors: true
