@@ -5,7 +5,8 @@ var CacheService = function( config ) {
   this.files  = {};
 
   // Create the temp directory
-  fs.mkdirSync(config.folder);
+  if (!fs.existsSync(config.folder))
+    fs.mkdirSync(config.folder);
 };
 
 CacheService.prototype.getCachedOrCreate = function ( fileId, fileCallback, createCallback ) {

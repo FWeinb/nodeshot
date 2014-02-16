@@ -29,6 +29,7 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
   }, options.timeout);
 
   // Hide window
+  // TODO: This will fail in headless mode!!
   options.show = false;
 
   var popWindow = gui.Window.open(url, options);
