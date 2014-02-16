@@ -9,25 +9,33 @@ better screenshots.
 
 ## Requirements
 
-  1. Download [node-webkit](https://github.com/rogerwang/node-webkit)
-  2. Put it in `PATH`
+  1. [node-webkit](https://github.com/rogerwang/node-webkit) in `PATH`
+  2. [node-js](http://nodejs.org)
 
 ## Running
 
-  1. `git clone https://github.com/fweinb/screenshot-service && cd screenshot-service`
-  2. Run `nodewebkit .` in the `screenshot-service` folder
-
+  1. `git clone https://github.com/FWeinb/screenshot-service.git && cd screenshot-service`
+  2. `npm install`
+  3. Run `nodewebkit .` in the `screenshot-service` folder
+  4. Open `http://localhost:8080/?url=http://s.codepen.io/FWeinb/fullpage/oyACz`
 
 ## Configurate
 
 This project is using [node-config](https://github.com/lorenwest/node-config) so you can find the config [here](/config/default.yaml)
 
+### Extended configuration
 
-## Using headless node-webkit via xvfb
+[node-webkit](https://github.com/rogerwang/node-webkit) can pass startup flags to chromium via the `chromium-args` value
+in the `package.json`.
+See node-webkit [manifest-format](https://github.com/rogerwang/node-webkit/wiki/Manifest-format) for more information.
+
+
+## Using a headless node-webkit via xvfb
 
 DISCLAIMER: For WebGL/3D CSS support you need hardware acceleration. Keep that in mind!
 
-[Optional]
+### Get a VM (optional)
+
   1. Go to `https://www.digitalocean.com/`
   2. Create a $5 droplet
   3. Login via `ssh`
