@@ -7,6 +7,10 @@ This screenshot-service is using node-webkit which comes with a recent version o
 , an up to date wrapper of Chromium. In contrast to phantomjs node-webkit supports 3D CSS and WebGL and thus can produce
 better screenshots.
 
+## Example
+
+See this [DEMO](http://s.codepen.io/FWeinb/fullpage/mELoj) (Be aware that it is running on a $5 digitalocean mashine. Be patient!)
+
 ## Requirements
 
   1. [node-webkit](https://github.com/rogerwang/node-webkit) in `PATH`
