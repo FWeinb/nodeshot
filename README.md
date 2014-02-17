@@ -9,7 +9,7 @@ better screenshots.
 
 ## Example
 
-See this [DEMO](http://s.codepen.io/FWeinb/fullpage/mELoj) (Be aware that it is running on a $5 digitalocean mashine. Be patient!)
+See this [DEMO](http://s.codepen.io/FWeinb/fullpage/mELoj) (Be aware that it is running on a $5 digitalocean machine. Be patient!)
 
 ## Requirements
 
