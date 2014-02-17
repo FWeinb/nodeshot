@@ -50,31 +50,30 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
 
       // Break here if request was canceled
       if ( canceled ) {
-	popWindow.close(true);
-	return;
+        popWindow.close(true);
+        return;
       }
 
       // Only run this if iFramesLoaded equals the amount of iframes on the page.
       if ( iFramesLoaded === popWindow.window.frames.length  + 1 ) {
-	// Cancel the timoutTimer
-	clearTimeout(timoutTimer);
+        // Cancel the timoutTimer
+        clearTimeout(timoutTimer);
 
-	// Wait for options.delay
-	setTimeout(function(){
-	  // Capture!
-	  popWindow.capturePage(function(img) {
-	    var stream = base64decode();
-		stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
-		stream.end();
-	    // Close the Window
-	    popWindow.close(true);
+        // Wait for options.delay
+        setTimeout(function(){
+          // Capture!
+          popWindow.capturePage(function(img) {
+            var stream = base64decode();
+                stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
+                stream.end();
+            // Close the Window
+            popWindow.close(true);
 
-	    // Execute callback
-	      callback(null, stream);
+            // Execute callback
+            callback(null, stream);
 
-	  }, options.format);
-
-	}, options.delay );
+          }, options.format);
+        }, options.delay );
       }
     });
 };
