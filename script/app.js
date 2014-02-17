@@ -6,7 +6,7 @@ var express       = require('express'),
     ScreenshotApi = require('./lib/ScreenshotApi.js');
 
 var cacheService  = new CacheService(config.cacheService);
-var screenshotApi = new ScreenshotApi();
+var screenshotApi = new ScreenshotApi(config.screenshot);
 
 var app = express();
 
