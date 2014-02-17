@@ -4,7 +4,7 @@ A simple screenshot web service powered by [Express](http://expressjs.com) and [
 Inspired by [fzaninotto/screenshot-as-a-service](https://github.com/fzaninotto/screenshot-as-a-service)
 
 This screenshot-service is using node-webkit which comes with a recent version of [CEF](https://code.google.com/p/chromiumembedded/)
-an up to date wrapper of Chromium. In contrast to phantomjs node-webkit supports for 3D CSS and WebGL and thus can produce
+, an up to date wrapper of Chromium. In contrast to phantomjs node-webkit supports 3D CSS and WebGL and thus can produce
 better screenshots.
 
 ## Requirements
