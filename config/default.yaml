@@ -7,6 +7,7 @@ screenshot:
   delay: 0
   maxdelay: 10000
   timeout: 10000 # Time in ms, maximal time to wait until the page is fully loaded
+  headless: false
 cacheService:
   folder: "tmp"
   ttl: 60000 # Time in ms 0 means cache forever
