@@ -4,7 +4,7 @@ var  utils         = require('./../lib/utils.js'),
 module.exports = function (app, config, screenshotApi, cacheService){
 
   /**
-   * Build a options object from the request query.
+   * Build an options object from the request query.
    */
   var numOptions = ['width', 'height', 'delay'],
       strOptions = ['format'];
@@ -56,13 +56,17 @@ module.exports = function (app, config, screenshotApi, cacheService){
 
     var url = req.query.url;
 
-
     try{
 
       if (!validator.isURL(url)){
         throw new Error('Invalid URL: '+ url);
       }
 
+
+      if ( config.server.cors ){
+	  res.setHeader("Access-Control-Allow-Origin", "*");
+	  res.setHeader("Access-Control-Expose-Headers", "Content-Type");
+      }
 
       // Build options from request.
       var options   = buildOptions(req.query);
@@ -82,7 +86,9 @@ module.exports = function (app, config, screenshotApi, cacheService){
 
       // is there a &callback url defined.
       var responseUrl = req.query.callback;
-      if ( !!responseUrl ){
+
+      // if there is one, answer with 200 OK instantly
+      if  (!!responseUrl){
         res.writeHead(200);
         res.end("Response will be send to "+ responseUrl);
       }
@@ -90,17 +96,19 @@ module.exports = function (app, config, screenshotApi, cacheService){
       cacheService.getCachedOrCreate(image,
         // How to serve the file
         function( stream ){
-              if ( !responseUrl ){ // No response URL. Response with image
+	      console.log("Server image");
 
-                if ( config.server.cors ){
-                    res.setHeader("Access-Control-Allow-Origin", "*");
-                    res.setHeader("Access-Control-Expose-Headers", "Content-Type");
-                }
+
+	      if ( !responseUrl ){ // No response URL. u with image
+
+		console.log("directly");
+
                 res.writeHead(200, {"Content-Type" : "image/"+ options.format });
                 stream.pipe(res);
 
               }else{ // send a post request to the responseUrl
-                console.log("Send Screenshot to " + responseUrl);
+		console.log("Send to " + responseUrl);
+
                 stream.pipe(request.post(responseUrl));
               }
         },
@@ -112,12 +120,14 @@ module.exports = function (app, config, screenshotApi, cacheService){
               res.writeHead(503);
               res.end('' + error);
             } else {
+	      console.log("Screenshot created");
               successCallback(stream);
             }
           });
         }
       );
     } catch ( error ){
+      console.log ( error );
       res.writeHead(503);
       res.end('' + error);
     }
