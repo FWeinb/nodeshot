@@ -9,14 +9,14 @@ var CacheService = function( config ) {
     fs.mkdirSync(config.folder);
 };
 
-CacheService.prototype.getCachedOrCreate = function ( fileId, fileCallback, createCallback ) {
+CacheService.prototype.getCachedOrCreate = function ( fileId, serveCallback, createCallback ) {
   if (!!this.files[fileId]){
     console.log("Serve from cache:" + fileId);
-    fileCallback(fs.createReadStream(this.config.folder + '/' + fileId));
+    serveCallback(fs.createReadStream(this.config.folder + '/' + fileId));
   } else {
     createCallback( function ( stream ){
       this.storeFile ( fileId, stream );
-      fileCallback(stream);
+      serveCallback(stream);
     }.bind(this));
   }
 };
