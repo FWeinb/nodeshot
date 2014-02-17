@@ -6,7 +6,9 @@ var gui           = nwrequire('nw.gui'), // Require NW module
 var mainWindow  = gui.Window.get();
 
 
-var ScreenshotApi = function () { };
+var ScreenshotApi = function (config) {
+  this.config = config;
+};
 
 /**
  * This function will make a screenshot.
@@ -22,40 +24,58 @@ var ScreenshotApi = function () { };
  *
  */
 ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
+
+  // Track if the request was canceled
   var canceled = false;
+
+  // Starte the timeoutTimer
   var timoutTimer = setTimeout(function(){
     canceled = true;
     callback(new Error("Requesting " + url + " took longer than "+ options.timeout + "ms"), null);
-  }, options.timeout);
+  }, options.timeout + options.delay);
 
-  // Hide window
-  // TODO: This will fail in headless mode!!
-  options.show = false;
+  // Hide window in non headless mode
+  options.show = this.config.headless; // Hide the window if we aren't running in headless mode.
+  options.nodejs = false;              // Disable nodejs for the new window.
 
   var popWindow = gui.Window.open(url, options);
 
+    var iFramesLoaded = 0;
+
+    // node-webkit is fireing the loaded event for each iframe.
+    // so let's count the invocations of loaded and only take the screenshot if all iframes are loaded.
+    // !THIS IS HACKY!
     popWindow.on('loaded', function() {
+      iFramesLoaded++;
 
       // Break here if request was canceled
-      if ( canceled ) return;
+      if ( canceled ) {
+	popWindow.close(true);
+	return;
+      }
 
-      // Cancel the timoutTimer
-      clearTimeout(timoutTimer);
+      // Only run this if iFramesLoaded equals the amount of iframes on the page.
+      if ( iFramesLoaded === popWindow.window.frames.length  + 1 ) {
+	// Cancel the timoutTimer
+	clearTimeout(timoutTimer);
 
-      // Wait for options.delay
-      setTimeout(function(){
-        // Capture!
-        popWindow.capturePage(function(img) {
-          var stream = base64decode();
-              stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
-              stream.end();
-          popWindow.close();
+	// Wait for options.delay
+	setTimeout(function(){
+	  // Capture!
+	  popWindow.capturePage(function(img) {
+	    var stream = base64decode();
+		stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
+		stream.end();
+	    // Close the Window
+	    popWindow.close(true);
 
-          // Execute callback
-            callback(null, stream);
+	    // Execute callback
+	      callback(null, stream);
 
-        }, options.format);
-      }, options.delay );
+	  }, options.format);
+
+	}, options.delay );
+      }
     });
 };
 
