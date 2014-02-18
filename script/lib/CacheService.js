@@ -7,6 +7,11 @@ var CacheService = function( config ) {
   // Create the temp directory
   if (!fs.existsSync(config.folder))
     fs.mkdirSync(config.folder);
+
+  var files = fs.readdirSync(config.folder);
+  files.forEach(function(id){
+    this.storeFile(id);
+  }.bind(this));
 };
 
 CacheService.prototype.getCachedOrCreate = function ( fileId, serveCallback, createCallback ) {
@@ -26,7 +31,8 @@ CacheService.prototype.storeFile = function( fileId, stream ) {
     return;
   }
 
-  stream.pipe(fs.createWriteStream(this.config.folder + '/' + fileId));
+  if ( stream )
+    stream.pipe(fs.createWriteStream(this.config.folder + '/' + fileId));
 
   this.files[fileId] = true;
   if ( this.config.ttl > 0){
