@@ -29,7 +29,7 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
   var canceled = false;
 
   // Starte the timeoutTimer
-  var timoutTimer = setTimeout(function(){
+  var timeoutTimer = setTimeout(function(){
     canceled = true;
     callback(new Error("Requesting " + url + " took longer than "+ options.timeout + "ms"), null);
   }, options.timeout + options.delay);
@@ -37,45 +37,67 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
   // Hide window in non headless mode
   options.show = this.config.headless; // Hide the window if we aren't running in headless mode.
   options.nodejs = false;              // Disable nodejs for the new window.
+  options["new-instance"] = false;
 
   var popWindow = gui.Window.open(url, options);
 
-    var iFramesLoaded = 0;
-
-    // node-webkit is fireing the loaded event for each iframe.
-    // so let's count the invocations of loaded and only take the screenshot if all iframes are loaded.
-    // !THIS IS HACKY!
-    popWindow.on('loaded', function() {
-      iFramesLoaded++;
-
+    /**
+     *  Main screenshot function.
+     *  Triggerd when either all iframes are loaded or one or more iframes need more than config.iframetimeout to load
+     */
+    var screenshot = function(){
       // Break here if request was canceled
       if ( canceled ) {
         popWindow.close(true);
         return;
       }
+      // Remove Scrollbar
+      var style = popWindow.window.document.createElement('style');
+      style.innerHTML = "body::-webkit-scrollbar { display: none; }";
+      popWindow.window.document.body.appendChild(style);
+
+      // Wait for options.delay
+      setTimeout(function(){
+	// Capture!
+	popWindow.capturePage(function(img) {
+	  var stream = base64decode();
+	      stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
+	      stream.end();
+	  // Close the Window
+	  popWindow.close(true);
+
+	  // Execute callback
+	  callback(null, stream);
+
+	}, options.format);
+      }, options.delay );
+    };
+
+    var iFramesLoaded = 0,
+	frameTimeout;
+
+    // node-webkit is firing the loaded event for each iframe.
+    // so let's count the invocations of loaded and only take the screenshot if all iframes are loaded.
+    // !THIS IS HACKY!
+    popWindow.on('loaded', function() {
+      iFramesLoaded++;
+
+      // Cancel the timeoutTimer
+      clearTimeout(timeoutTimer);
+      // Reset the last frameTimeout
+      clearTimeout(frameTimeout);
+
+      frameTimeout = setTimeout(function(){
+	screenshot();
+      }, this.config.iframetimeout);
 
       // Only run this if iFramesLoaded equals the amount of iframes on the page.
       if ( iFramesLoaded === popWindow.window.frames.length  + 1 ) {
-        // Cancel the timoutTimer
-        clearTimeout(timoutTimer);
-
-        // Wait for options.delay
-        setTimeout(function(){
-          // Capture!
-          popWindow.capturePage(function(img) {
-            var stream = base64decode();
-                stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
-                stream.end();
-            // Close the Window
-            popWindow.close(true);
-
-            // Execute callback
-            callback(null, stream);
-
-          }, options.format);
-        }, options.delay );
+	clearTimeout(frameTimeout);
+	screenshot();
       }
-    });
+
+    }.bind(this));
 };
 
 
