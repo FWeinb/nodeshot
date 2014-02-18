@@ -15,8 +15,6 @@
     "webkit"
   ],
 
-  "chromium-args": "--enable-experimental-web-platform-features",
-
   "window": {
     "show": false
   },
