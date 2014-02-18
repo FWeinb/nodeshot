@@ -1,4 +1,5 @@
 screenshot:
+  noscrollbar: true
   width: 1024
   maxwidth: 3000
   height: 600

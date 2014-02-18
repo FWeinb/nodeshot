@@ -52,29 +52,30 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
         return;
       }
       // Remove Scrollbar
-      var style = popWindow.window.document.createElement('style');
-      style.innerHTML = "body::-webkit-scrollbar { display: none; }";
-      popWindow.window.document.body.appendChild(style);
-
+      if ( this.config.noscrollbar){
+        var style = popWindow.window.document.createElement('style');
+        style.innerHTML = "::-webkit-scrollbar { display: none; }";
+        popWindow.window.document.body.appendChild(style);
+      }
       // Wait for options.delay
       setTimeout(function(){
-	// Capture!
-	popWindow.capturePage(function(img) {
-	  var stream = base64decode();
-	      stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
-	      stream.end();
-	  // Close the Window
-	  popWindow.close(true);
+          // Capture!
+          popWindow.capturePage(function(img) {
+            var stream = base64decode();
+                stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
+                stream.end();
+            // Close the Window
+            popWindow.close(true);
 
-	  // Execute callback
-	  callback(null, stream);
-
-	}, options.format);
+            // Execute callback
+            callback(null, stream);
+       }, options.format);
       }, options.delay );
-    };
+
+    }.bind(this);
 
     var iFramesLoaded = 0,
-	frameTimeout;
+  frameTimeout;
 
     // node-webkit is firing the loaded event for each iframe.
     // so let's count the invocations of loaded and only take the screenshot if all iframes are loaded.
@@ -88,13 +89,13 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
       clearTimeout(frameTimeout);
 
       frameTimeout = setTimeout(function(){
-	screenshot();
+        screenshot();
       }, this.config.iframetimeout);
 
       // Only run this if iFramesLoaded equals the amount of iframes on the page.
       if ( iFramesLoaded === popWindow.window.frames.length  + 1 ) {
-	clearTimeout(frameTimeout);
-	screenshot();
+  clearTimeout(frameTimeout);
+  screenshot();
       }
 
     }.bind(this));
