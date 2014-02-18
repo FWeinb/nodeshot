@@ -3,7 +3,7 @@
 
   "author": "Fabrice Weinberg <Fabrice@weinberg.me>",
   "description": "Website screenshot service powered by node-webkit",
-  "version": "0.1.2",
+  "version": "0.1.3",
 
   "main": "index.html",
 
