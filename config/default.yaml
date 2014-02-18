@@ -7,6 +7,7 @@ screenshot:
   delay: 0
   maxdelay: 10000
   timeout: 10000 # Time in ms, maximal time to wait until the page is fully loaded
+  iframetimeout: 2000 # Time in ms, maximal time to wait for an iframe to load.
   headless: false
 cacheService:
   folder: "tmp"
