@@ -18,7 +18,6 @@ var ScreenshotApi = function (config) {
  *    height: viewport-height
  *    delay:  delay in ms
  *    format: ["png", "jpeg"]
- *    timeout: how long to wait till the page is fully loaded
  *
  *  callback : function ( error, stream ) { } 
  *
@@ -31,13 +30,13 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
   // Starte the timeoutTimer
   var timeoutTimer = setTimeout(function(){
     canceled = true;
-    callback(new Error("Requesting " + url + " took longer than "+ options.timeout + "ms"), null);
-  }, options.timeout + options.delay);
+    callback(new Error('Requesting ' + url + ' took longer than '+ options.timeout + 'ms'), null);
+  }, this.config.timeout + options.delay);
 
   // Hide window in non headless mode
   options.show = this.config.headless; // Hide the window if we aren't running in headless mode.
   options.nodejs = false;              // Disable nodejs for the new window.
-  options["new-instance"] = false;
+  options['new-instance'] = false;
 
   var popWindow = gui.Window.open(url, options);
 
@@ -52,11 +51,12 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
         return;
       }
       // Remove Scrollbar
-      if ( this.config.noscrollbar){
+      if ( this.config.noscrollbar ){
         var style = popWindow.window.document.createElement('style');
-        style.innerHTML = "::-webkit-scrollbar { display: none; }";
+        style.innerHTML = '::-webkit-scrollbar { display: none; }';
         popWindow.window.document.body.appendChild(style);
       }
+
       // Wait for options.delay
       setTimeout(function(){
           // Capture!
@@ -75,7 +75,7 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
     }.bind(this);
 
     var iFramesLoaded = 0,
-  frameTimeout;
+        frameTimeout;
 
     // node-webkit is firing the loaded event for each iframe.
     // so let's count the invocations of loaded and only take the screenshot if all iframes are loaded.
@@ -85,17 +85,19 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
 
       // Cancel the timeoutTimer
       clearTimeout(timeoutTimer);
+
       // Reset the last frameTimeout
       clearTimeout(frameTimeout);
 
+      // Start a new iFrame timout.
       frameTimeout = setTimeout(function(){
         screenshot();
       }, this.config.iframetimeout);
 
       // Only run this if iFramesLoaded equals the amount of iframes on the page.
       if ( iFramesLoaded === popWindow.window.frames.length  + 1 ) {
-  clearTimeout(frameTimeout);
-  screenshot();
+        clearTimeout(frameTimeout);
+        screenshot();
       }
 
     }.bind(this));
