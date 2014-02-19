@@ -1,12 +1,9 @@
 {
   "name": "screenshot-service",
-
   "author": "Fabrice Weinberg <Fabrice@weinberg.me>",
   "description": "Website screenshot service powered by node-webkit",
   "version": "0.1.3",
-
   "main": "index.html",
-
   "keywords": [
     "node-webkit",
     "screenshot",
@@ -14,19 +11,17 @@
     "chromium",
     "webkit"
   ],
-
   "window": {
     "show": false
   },
-
   "dependencies": {
     "express": "~3.4.8",
     "base64-stream": "~0.1.2",
     "config": "~0.4.35",
     "yaml": "~0.2.3",
     "request": "~2.33.0",
-    "validator": "~3.2.1"
+    "validator": "~3.2.1",
+    "winston": "~0.7.2"
   },
-
   "license": "MIT"
 }

@@ -1,3 +1,7 @@
+logging:
+  filename: "runtime.log"
+  level: "verbose" #npm style logging
+  json: false
 screenshot:
   noscrollbar: true
   width: 1024
@@ -12,6 +16,7 @@ screenshot:
   headless: false
 cacheService:
   folder: "tmp"
+  reload: true
   ttl: 60000 # Time in ms 0 means cache forever
 server:
   port: 8080
