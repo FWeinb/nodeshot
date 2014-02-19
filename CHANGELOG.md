@@ -1,5 +1,6 @@
 Changelog
 -------
+  * 0.1.4 Add [winstone](https://github.com/flatiron/winston) as logging system
   * 0.1.3 Add option to remove scrollbars from rendering.
   * 0.1.2 Fixed an issue where a page run into a timout because some iframes blocket rendering
   * 0.1.1 Fixed an issue where you couldn't create screenshots for pages containing iframes
