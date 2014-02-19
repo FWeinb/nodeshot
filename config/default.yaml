@@ -1,6 +1,7 @@
 logging:
   filename: "runtime.log"
   level: "verbose" #npm style logging
+  json: false
 screenshot:
   noscrollbar: true
   width: 1024
