@@ -107,13 +107,15 @@ module.exports = function (app, config, screenshotApi, cacheService){
         },
         // How to create the screenshot
         function( successCallback ){
-          winston.info('New Screenshot of "%s"', url);
+          winston.info('New screenshot for "%s"', url);
+          winston.profile('Taking screenshot took');
           screenshotApi.screenshot(url, options, function (error, stream){
             if ( error ) {
               res.writeHead(503);
               res.end('' + error);
             } else {
-              winston.log('Screenshot created for "%s"', url);
+              winston.profile('Taking screenshot took');
+              winston.info('Screenshot created for "%s"', url);
               successCallback(stream);
             }
           });
