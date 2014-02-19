@@ -53,7 +53,7 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
       // Remove Scrollbar
       if ( this.config.noscrollbar ){
         var style = popWindow.window.document.createElement('style');
-        style.innerHTML = '::-webkit-scrollbar { display: none; }';
+        style.innerHTML = 'html,body { overflow: hidden; }';
         popWindow.window.document.body.appendChild(style);
       }
 
