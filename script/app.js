@@ -11,6 +11,8 @@ var express       = require('express'),
 if ( !!config.logging )
   winston.add(winston.transports.File, config.logging );
 
+winston.info("--- Starting ---");
+
 var cacheService  = new CacheService(config.cacheService);
 var screenshotApi = new ScreenshotApi(config.screenshot);
 
