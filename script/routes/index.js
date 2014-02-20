@@ -77,7 +77,7 @@ module.exports = function (app, config, screenshotApi, cacheService){
     var url = req.query.url;
 
     // Assume http:// if nothing is specifiyed.
-    if ( url.indexOf('http://') === -1 ){
+    if ( url.indexOf('http') === -1 ){
       url = 'http://' + url;
     }
 
@@ -111,7 +111,7 @@ module.exports = function (app, config, screenshotApi, cacheService){
       if  (!!responseUrl){
 
         // Assume http:// if nothing is specifiyed.
-        if ( responseUrl.indexOf('http://') === -1 ){
+        if ( responseUrl.indexOf('http') === -1 ){
           responseUrl = 'http://' + responseUrl;
         }
 
