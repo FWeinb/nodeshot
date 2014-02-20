@@ -65,7 +65,6 @@ module.exports = function (app, config, screenshotApi, cacheService){
 
   /**
    * Main route.
-   *
    */
   app.get('/', function(req, res, next){
 
@@ -76,6 +75,11 @@ module.exports = function (app, config, screenshotApi, cacheService){
     }
 
     var url = req.query.url;
+
+    // Assume http:// if nothing is specifiyed.
+    if ( url.indexOf('http://') === -1 ){
+      url = 'http://' + url;
+    }
 
     try{
 
@@ -110,6 +114,15 @@ module.exports = function (app, config, screenshotApi, cacheService){
 
       // if there is one, answer with 200 OK instantly
       if  (!!responseUrl){
+
+        // Assume http:// if nothing is specifiyed.
+        if ( responseUrl.indexOf('http://') === -1 ){
+          responseUrl = 'http://' + responseUrl;
+        }
+
+        if (!validator.isURL(responseUrl)){
+          throw new Error('Invalid callback url ' + url);
+        }
         res.writeHead(200);
         res.end('Response will be send to '+ responseUrl);
       }
