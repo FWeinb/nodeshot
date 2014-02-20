@@ -88,11 +88,6 @@ module.exports = function (app, config, screenshotApi, cacheService){
       }
 
 
-      if ( config.server.cors ){
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Expose-Headers', 'Content-Type');
-      }
-
       // Build options from request.
       var options   = buildOptions(req.query, config.screenshot.url);
 

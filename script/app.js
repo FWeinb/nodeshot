@@ -1,4 +1,5 @@
 var express       = require('express'),
+
     request       = require('request'),
     config        = require('config'),
 
@@ -19,9 +20,18 @@ var screenshotApi = new ScreenshotApi(config.screenshot);
 var app = express();
 
 // Basic configuration
-app.configure(function(){
- app.use(app.router);
-});
+if (config.server.cors){
+  app.use(function(req, res, next) {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+      res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+      next();
+
+  });
+}
+
+app.use(app.router);
 
 // Require the main route
 require('./routes/index.js')(app, config, screenshotApi, cacheService);

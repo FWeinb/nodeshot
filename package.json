@@ -2,7 +2,7 @@
   "name": "screenshot-service",
   "author": "Fabrice Weinberg <Fabrice@weinberg.me>",
   "description": "Website screenshot service powered by node-webkit",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "main": "index.html",
   "keywords": [
     "node-webkit",
