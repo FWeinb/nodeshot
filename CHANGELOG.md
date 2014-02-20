@@ -1,5 +1,6 @@
 Changelog
 -------
+  * 0.1.6 Restructured `default.yaml`. Unified reading of options from URL. Added `/options` route.
   * 0.1.5 Quickfix: remove scrollbars works now
   * 0.1.4 Add [winstone](https://github.com/flatiron/winston) as logging system
   * 0.1.3 Add option to remove scrollbars from rendering.
