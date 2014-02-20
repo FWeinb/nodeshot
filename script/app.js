@@ -25,6 +25,7 @@ app.configure(function(){
 
 // Require the main route
 require('./routes/index.js')(app, config, screenshotApi, cacheService);
+require('./routes/options.js')(app, config);
 
 // Start application
 app.listen(config.server.port);
