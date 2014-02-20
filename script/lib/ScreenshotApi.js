@@ -18,6 +18,7 @@ var ScreenshotApi = function (config) {
  *    height: viewport-height
  *    delay:  delay in ms
  *    format: ["png", "jpeg"]
+ *    scrollbar: true/false
  *
  *  callback : function ( error, stream ) { } 
  *
@@ -31,7 +32,7 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
   var timeoutTimer = setTimeout(function(){
     canceled = true;
     callback(new Error('Requesting ' + url + ' took longer than '+ options.timeout + 'ms'), null);
-  }, this.config.timeout + options.delay);
+  }, this.config.timeout);
 
   // Hide window in non headless mode
   options.show = this.config.headless; // Hide the window if we aren't running in headless mode.
@@ -50,8 +51,8 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
         popWindow.close(true);
         return;
       }
-      // Remove Scrollbar
-      if ( this.config.noscrollbar ){
+      // Remove scrollbar
+      if ( options.scrollbar ){
         var style = popWindow.window.document.createElement('style');
         style.innerHTML = 'html,body { overflow: hidden; }';
         popWindow.window.document.body.appendChild(style);
@@ -64,15 +65,17 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
             var stream = base64decode();
                 stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
                 stream.end();
+
             // Close the Window
             popWindow.close(true);
 
             // Execute callback
             callback(null, stream);
+
        }, options.format);
       }, options.delay );
 
-    }.bind(this);
+    };
 
     var iFramesLoaded = 0,
         frameTimeout;

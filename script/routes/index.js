@@ -7,10 +7,11 @@ module.exports = function (app, config, screenshotApi, cacheService){
   /**
    * Build an options object from the request query.
    */
-  var numOptions = ['width', 'height', 'delay'],
-      strOptions = ['format'];
+  var numOptions  = ['width', 'height', 'delay'],
+      boolOptions = ['scrollbar', 'force'],
+      strOptions  = ['format', 'callback'];
 
-  var buildOptions = function(query){
+  var buildOptions = function(query, defaults){
     var options = {};
 
     // Add numOptions
@@ -18,25 +19,45 @@ module.exports = function (app, config, screenshotApi, cacheService){
       if (!!query[item]){
         var value = parseInt(query[item], 10);
         // Check if limit are fullfiled
-        if ( value <= config.screenshot['max' + item] ){
+        if ( value <= defaults['max' + item] ){
           options[item] = value;
         }else{
-          throw new Error(item + " must be lesser or equal to " + config.screenshot["max"+item]);
+          throw new Error(item + ' must be lesser or equal to ' + defaults['max' + item]);
         }
       }
     });
+
     // Add strOptions
     strOptions.forEach(function(item){
       if (!!query[item]){
-        options[item] = query[item];
+        if (defaults['allowed' + item].indexOf(query[item]) != -1){
+          options[item] = query[item];
+        } else{
+          throw new Error( item + ' must be one of these values: ' + defaults['allowed' + item]);
+        }
       }
     });
 
+    // Add boolOptions
+    boolOptions.forEach(function(item){
+      if (!!query[item]){
+        options[item] = false;
+        switch(query[item].toLowerCase()){
+            case "true":
+            case "yes":
+            case "1":
+              options[item] = true;
+          }
+      }
+    });
+
+
     // Merge in defaults
-    options.format = options.format || config.screenshot.format;
-    options.delay  = options.delay  || config.screenshot.delay;
-    options.width  = options.width  || config.screenshot.width;
-    options.height = options.height || config.screenshot.height;
+    options.format    = options.format    || defaults.format;
+    options.scrollbar = options.scrollbar || defaults.scrollbar;
+    options.delay     = options.delay     || defaults.delay;
+    options.width     = options.width     || defaults.width;
+    options.height    = options.height    || defaults.height;
 
     return options;
   };
@@ -69,7 +90,7 @@ module.exports = function (app, config, screenshotApi, cacheService){
       }
 
       // Build options from request.
-      var options   = buildOptions(req.query);
+      var options   = buildOptions(req.query, config.screenshot.url);
 
       var optionStr = JSON.stringify(options);
 
@@ -79,13 +100,13 @@ module.exports = function (app, config, screenshotApi, cacheService){
       winston.info('Request "%s", cacheId: "%s"', url, image, optionStr);
 
       // &force will invalidate the cache
-      if ( !!req.query.force ){
+      if ( options.force ){
         winston.info('Remove "%s" from cache', image);
         cacheService.removeFile(image);
       }
 
       // is there a &callback url defined.
-      var responseUrl = req.query.callback;
+      var responseUrl = options.callback;
 
       // if there is one, answer with 200 OK instantly
       if  (!!responseUrl){
@@ -96,7 +117,7 @@ module.exports = function (app, config, screenshotApi, cacheService){
       cacheService.getCachedOrCreate(image,
         // How to serve the file
         function( stream ){
-          if ( !responseUrl ){ // No response URL. u with image
+          if ( !responseUrl ){ // No response URL. Serve image directly
             winston.info('Serve image directly');
             res.writeHead(200, {'Content-Type' : 'image/'+ options.format });
             stream.pipe(res);
@@ -122,7 +143,7 @@ module.exports = function (app, config, screenshotApi, cacheService){
         }
       );
     } catch ( error ){
-      winston.info ( error );
+      winston.info ( '' + error );
       res.writeHead(503);
       res.end('' + error);
     }
