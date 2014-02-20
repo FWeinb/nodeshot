@@ -52,7 +52,7 @@ ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
         return;
       }
       // Remove scrollbar
-      if ( options.scrollbar ){
+      if ( !options.scrollbar ){
         var style = popWindow.window.document.createElement('style');
         style.innerHTML = 'html,body { overflow: hidden; }';
         popWindow.window.document.body.appendChild(style);
