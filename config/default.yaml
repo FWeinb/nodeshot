@@ -3,9 +3,9 @@ logging: # These options are directly passed to winston
   level: "verbose" #npm style logging
   json: false
 screenshot:
-  timeout: 10000 # Time in ms, maximal time to wait until the page is fully loaded
+  timeout: 10000 # Time in ms, maximal time to wait until the main page is fully loaded
   iframetimeout: 2000 # Time in ms, maximal time to wait for an iframe to load.
-  headless: false
+  showwindow: true
   url: # These options can be configured via the URL request
     width: 1024
     maxwidth: 3000
@@ -18,6 +18,7 @@ screenshot:
     delay: 0
     maxdelay: 10000
     scrollbar: false
+    fullpage: false
 cacheService:
   folder: "tmp"
   reload: true

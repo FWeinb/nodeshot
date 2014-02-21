@@ -81,8 +81,8 @@ var screenshot = function(nwwindow, window, options, config, callback ){
  */
 ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
 
-  options.show = this.config.headless; // Hide the window if we aren't running in headless mode.
-  options.nodejs = false;              // Disable nodejs for the new window.
+  options.show = this.config.showwindow; // Hide the window if we aren't running in headless mode.
+  options.nodejs = false;                // Disable nodejs for the new window.
 
   var popWindow,
       frameTimeout,
