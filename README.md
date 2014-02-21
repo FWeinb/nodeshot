@@ -30,6 +30,10 @@ See this [DEMO](http://s.codepen.io/FWeinb/fullpage/mELoj) (Be aware that it is 
 GET /?url=www.google.com
 # Return a 1024x600 PNG screenshot of the www.google.com homepage
 
+# Take a screenshot of the whole page
+GET /?url=www.google.com&fullpage=true
+# Return a screenshot of the whole www.google.com homepage
+
 # Custom viewport size
 GET /?url=www.google.com&width=800&height=600
 # Return a 800x600 PNG screenshot of the www.google.com homepage
