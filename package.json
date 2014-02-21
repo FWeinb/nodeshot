@@ -12,7 +12,7 @@
     "webkit"
   ],
   "window": {
-    "show": false
+    "show": true
   },
   "dependencies": {
     "express": "~3.4.8",
