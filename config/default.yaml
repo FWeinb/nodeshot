@@ -1,6 +1,7 @@
 logging: # These options are directly passed to winston
   filename: "runtime.log"
   level: "verbose" #npm style logging
+  handleExceptions: true
   json: false
 screenshot:
   timeout: 10000 # Time in ms, maximal time to wait until the main page is fully loaded
