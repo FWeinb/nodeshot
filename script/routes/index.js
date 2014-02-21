@@ -8,7 +8,7 @@ module.exports = function (app, config, screenshotApi, cacheService){
    * Build an options object from the request query.
    */
   var numOptions  = ['width', 'height', 'delay'],
-      boolOptions = ['scrollbar', 'force'],
+      boolOptions = ['fullpage', 'scrollbar', 'force'],
       strOptions  = ['format', 'callback'];
 
   var buildOptions = function(query, defaults){
@@ -19,10 +19,10 @@ module.exports = function (app, config, screenshotApi, cacheService){
       if (!!query[item]){
         var value = parseInt(query[item], 10);
         // Check if limit are fullfiled
-        if ( value <= defaults['max' + item] ){
+        if ( 0 < value && value <= defaults['max' + item] ){
           options[item] = value;
         }else{
-          throw new Error(item + ' must be lesser or equal to ' + defaults['max' + item]);
+          throw new Error(item + ' must be bigger than 0 and lesser or equal to ' + defaults['max' + item]);
         }
       }
     });
@@ -30,7 +30,7 @@ module.exports = function (app, config, screenshotApi, cacheService){
     // Add strOptions
     strOptions.forEach(function(item){
       if (!!query[item]){
-        if (defaults['allowed' + item].indexOf(query[item]) != -1){
+        if (!!defaults['allowed' + item] || defaults['allowed' + item].indexOf(query[item]) != -1){
           options[item] = query[item];
         } else{
           throw new Error( item + ' must be one of these values: ' + defaults['allowed' + item]);
@@ -55,6 +55,7 @@ module.exports = function (app, config, screenshotApi, cacheService){
     // Merge in defaults
     options.format    = options.format    || defaults.format;
     options.scrollbar = options.scrollbar || defaults.scrollbar;
+    options.fullpage  = options.fullpage  || defaults.fullpage;
     options.delay     = options.delay     || defaults.delay;
     options.width     = options.width     || defaults.width;
     options.height    = options.height    || defaults.height;
@@ -136,15 +137,15 @@ module.exports = function (app, config, screenshotApi, cacheService){
         },
         // How to create the screenshot
         function( successCallback ){
+          var profileScreenshot = new Date();
           winston.info('New screenshot for "%s"', url);
-          winston.profile('Taking screenshot took');
           screenshotApi.screenshot(url, options, function (error, stream){
             if ( error ) {
+              winston.info ( '' + error );
               res.writeHead(503);
               res.end('' + error);
             } else {
-              winston.profile('Taking screenshot took');
-              winston.info('Screenshot created for "%s"', url);
+              winston.info('Screenshot created for "%s" in %dms', url, new Date() - profileScreenshot);
               successCallback(stream);
             }
           });
