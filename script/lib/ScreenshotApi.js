@@ -1,4 +1,5 @@
 var gui           = nwrequire('nw.gui'), // Require NW module
+    winston       = require('winston'),
     base64decode  = require('base64-stream').decode,
     fs            = require('fs');
 
@@ -10,6 +11,60 @@ var ScreenshotApi = function (config) {
   this.config = config;
 };
 
+/*
+ * Take the screen capture
+ */
+var capture = function (nwwindow, options, callback){
+   // Capture!
+   nwwindow.capturePage(function(img) {
+     var stream = base64decode();
+         stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
+         stream.end();
+
+     // Close the Window
+     nwwindow.close(true);
+
+     // Execute callback
+     callback(null, stream);
+  }, options.format);
+};
+
+/**
+ * Inject css and execute delay
+ */
+var screenshot = function(nwwindow, window, options, config, callback ){
+  // Remove scrollbar
+  if ( !options.scrollbar ){
+    var style = window.document.createElement('style');
+        style.innerHTML = 'html,body { overflow: hidden; }';
+    window.document.body.appendChild(style);
+  }
+
+  // Wait for options.delay
+  setTimeout(function(){
+    if ( options.fullpage ) {
+
+      nwwindow.on('resize', function(width, height){
+        winston.info('Resized: %dx%d', width, height);
+        setTimeout(function(){
+          capture ( nwwindow, options, callback );
+        }, 500); // Better save than sorry
+      });
+
+      var rect = window.document.body.getBoundingClientRect();
+      nwwindow.resizeTo(Math.round(rect.width), Math.round(rect.height) + 100);
+
+    } else {
+
+      capture ( nwwindow, options, callback );
+
+    }
+
+  }, options.delay );
+};
+
+
+
 /**
  * This function will make a screenshot.
  *  url : URL to screenshot
@@ -19,91 +74,39 @@ var ScreenshotApi = function (config) {
  *    delay:  delay in ms
  *    format: ["png", "jpeg"]
  *    scrollbar: true/false
+ *    fullpage: true/false
  *
  *  callback : function ( error, stream ) { } 
  *
  */
 ScreenshotApi.prototype.screenshot = function ( url, options, callback ){
 
-  // Track if the request was canceled
-  var canceled = false;
-
-  // Starte the timeoutTimer
-  var timeoutTimer = setTimeout(function(){
-    canceled = true;
-    callback(new Error('Requesting ' + url + ' took longer than '+ options.timeout + 'ms'), null);
-  }, this.config.timeout);
-
-  // Hide window in non headless mode
   options.show = this.config.headless; // Hide the window if we aren't running in headless mode.
   options.nodejs = false;              // Disable nodejs for the new window.
-  options['new-instance'] = false;
 
-  var popWindow = gui.Window.open(url, options);
+  var popWindow,
+      frameTimeout,
+      timeoutTimer = setTimeout(function(){
+        if (!!popWindow) popWindow.close(true);
+        callback(new Error('Requesting ' + url + ' took longer than '+ this.config.timeout + 'ms'), null);
+      }.bind(this), this.config.timeout);
 
-    /**
-     *  Main screenshot function.
-     *  Triggerd when either all iframes are loaded or one or more iframes need more than config.iframetimeout to load
-     */
-    var screenshot = function(){
-      // Break here if request was canceled
-      if ( canceled ) {
-        popWindow.close(true);
-        return;
-      }
-      // Remove scrollbar
-      if ( !options.scrollbar ){
-        var style = popWindow.window.document.createElement('style');
-        style.innerHTML = 'html,body { overflow: hidden; }';
-        popWindow.window.document.body.appendChild(style);
-      }
+    popWindow = gui.Window.open(url, options);
 
-      // Wait for options.delay
-      setTimeout(function(){
-          // Capture!
-          popWindow.capturePage(function(img) {
-            var stream = base64decode();
-                stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
-                stream.end();
+    // node-webkit is firing the `document-end` event for each iframe.
+    popWindow.on('document-end', function(frame){
+        clearTimeout(timeoutTimer);
 
-            // Close the Window
-            popWindow.close(true);
-
-            // Execute callback
-            callback(null, stream);
-
-       }, options.format);
-      }, options.delay );
-
-    };
-
-    var iFramesLoaded = 0,
-        frameTimeout;
-
-    // node-webkit is firing the loaded event for each iframe.
-    // so let's count the invocations of loaded and only take the screenshot if all iframes are loaded.
-    // !THIS IS HACKY!
-    popWindow.on('loaded', function() {
-      iFramesLoaded++;
-
-      // Cancel the timeoutTimer
-      clearTimeout(timeoutTimer);
-
-      // Reset the last frameTimeout
-      clearTimeout(frameTimeout);
-
-      // Start a new iFrame timout.
-      frameTimeout = setTimeout(function(){
-        screenshot();
-      }, this.config.iframetimeout);
-
-      // Only run this if iFramesLoaded equals the amount of iframes on the page.
-      if ( iFramesLoaded === popWindow.window.frames.length  + 1 ) {
+        // Clear the timer of the previous frame
         clearTimeout(frameTimeout);
-        screenshot();
-      }
 
+        // Restart the frameTimeout again fort his frame.
+        frameTimeout = setTimeout(function(){
+          // Take a screenshot if no iFrames are loaded for more than this.config.iframetimeout
+          screenshot(popWindow, popWindow.window, options, this.config, callback);
+        }.bind(this), this.config.iframetimeout);
     }.bind(this));
+
 };
 
 
