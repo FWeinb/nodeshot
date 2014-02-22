@@ -1,6 +1,6 @@
 # Screenshot as a Service
 
-A simple screenshot web service powered by [Express](http://expressjs.com) and [node-webkit](https://github.com/rogerwang/node-webkit).
+A simple screenshot web service powered by [Kue](https://github.com/LearnBoost/kue), [Express](http://expressjs.com) and [node-webkit](https://github.com/rogerwang/node-webkit).
 Inspired by [fzaninotto/screenshot-as-a-service](https://github.com/fzaninotto/screenshot-as-a-service)
 
 This screenshot-service is using node-webkit which comes with a recent version of [CEF](https://code.google.com/p/chromiumembedded/)
@@ -9,18 +9,23 @@ better screenshots.
 
 ## Example
 
-See this [DEMO](http://s.codepen.io/FWeinb/fullpage/mELoj) (Be aware that it is running on a $5 digitalocean machine. Be patient!)
+See this [DEMO](http://s.codepen.io/FWeinb/fullpage/mELoj) (Be aware that it is running on a $10 digitalocean machine. Be patient!)
 
 ## Requirements
 
   1. [node-webkit](https://github.com/rogerwang/node-webkit) in `PATH`
   2. [node-js](http://nodejs.org)
+  3. [redis](http://redis.io)
+
+## Things you should know
+On OS X the node-webkit executable is called `node-webkit` and on linux and Windows it's called `nw`. Keep that in mind.
 
 ## Running
 
-  1. `git clone https://github.com/FWeinb/screenshot-service.git && cd screenshot-service`
-  2. `npm install`
-  3. Run `nodewebkit .` in the `screenshot-service` folder
+  1. `git clone https://github.com/FWeinb/noteshot.git && cd noteshot`
+  2. `npm install` in `noteshot-renderer` and in `noteshot-server`
+  3. Run `./start.sh` in the `noteshot-renderer` folder
+  4. Run `node app.js` in the `notehsot-server` folder
   4. Open `http://localhost:8080/?url=http://s.codepen.io/FWeinb/fullpage/oyACz`
 
 ## API Usage
@@ -49,6 +54,9 @@ GET /?url=www.google.com&delay=1000
 # Return a 1024x600 PNG screenshot of the www.google.com homepage
 # 1 second after it's loaded
 ```
+
+# !! OUTDATED !!
+
 ## Configuration
 
 This project is using [node-config](https://github.com/lorenwest/node-config) so you can find the config [here](/config/default.yaml)

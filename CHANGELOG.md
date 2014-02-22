@@ -1,5 +1,6 @@
 Changelog
 -------
+  * 0.3.0 Complete redesign. Using `kue` as a job queue. Seperated the express app from the `node-webkit` app.
   * 0.2.0 Rewrote the `ScrenshotApi.js` and added a `fullpage` flag.
   * 0.1.9 Fix a bug introduced in 0.1.7
   * 0.1.8 Add CORS middleware to enable cors for all routes.
