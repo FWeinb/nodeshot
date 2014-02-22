@@ -1,8 +1,15 @@
 var  utils         = require('./../lib/utils.js'),
+     fs            = require('fs'),
      winston       = require('winston'),
-     validator     = require('validator');
+     validator     = require('validator'),
+     kue           = require('kue'),
+     jobs          = kue.createQueue();
 
-module.exports = function (app, config, screenshotApi, cacheService){
+// Hacky. This will hold job objects that are currently running.
+var pendingJobs = {};
+
+
+module.exports = function (app, config, cacheService){
 
   /**
    * Build an options object from the request query.
@@ -88,9 +95,8 @@ module.exports = function (app, config, screenshotApi, cacheService){
         throw new Error('Invalid URL: '+ url);
       }
 
-
       // Build options from request.
-      var options   = buildOptions(req.query, config.screenshot.url);
+      var options   = buildOptions(req.query, config.screenshot);
 
       var optionStr = JSON.stringify(options);
 
@@ -98,12 +104,6 @@ module.exports = function (app, config, screenshotApi, cacheService){
       var image = utils.md5(url + optionStr) + "." + options.format;
 
       winston.info('Request "%s", cacheId: "%s"', url, image, optionStr);
-
-      // &force will invalidate the cache
-      if ( options.force ){
-        winston.info('Remove "%s" from cache', image);
-        cacheService.removeFile(image);
-      }
 
       // is there a &callback url defined.
       var responseUrl = options.callback;
@@ -123,34 +123,63 @@ module.exports = function (app, config, screenshotApi, cacheService){
         res.end('Response will be send to '+ responseUrl);
       }
 
-      cacheService.getCachedOrCreate(image,
-        // How to serve the file
-        function( stream ){
-          if ( !responseUrl ){ // No response URL. Serve image directly
-            winston.info('Serve image directly');
-            res.writeHead(200, {'Content-Type' : 'image/'+ options.format });
-            stream.pipe(res);
-          }else{ // send a post request to the responseUrl
-            winston.info('Send image to "%s"', responseUrl);
-            stream.pipe(request.post(responseUrl));
-          }
-        },
-        // How to create the screenshot
-        function( successCallback ){
-          var profileScreenshot = new Date();
-          winston.info('New screenshot for "%s"', url);
-          screenshotApi.screenshot(url, options, function (error, stream){
-            if ( error ) {
-              winston.info ( '' + error );
-              res.writeHead(503);
-              res.end('' + error);
-            } else {
-              winston.info('Screenshot created for "%s" in %dms', url, new Date() - profileScreenshot);
-              successCallback(stream);
-            }
+
+      // &force will invalidate the cache
+      if ( options.force ){
+        winston.info('Remove "%s" from cache', image);
+        cacheService.removeFile(image);
+      }
+
+      var serveImage = function(){
+        cacheService.getFile(image).pipe(res);
+      };
+
+      if ( cacheService.hasFile(image) ){
+
+        winston.info('Server image "%s" from cache', image);
+        serveImage();
+      } else {
+
+        var attachListenerTo = function(job){
+          job.on('complete', function(){
+            // remove from pending job list.
+            delete pendingJobs[image];
+
+            winston.info("server new image");
+            cacheService.addFile(image);
+
+            serveImage();
           });
+
+          job.on('failed', function(error){
+           winston.info('' + error);
+           res.writeHead(503);
+           res.end(''+error);
+          });
+        };
+
+        // See if there is a job pending
+        if ( pendingJobs[image] ) {
+
+          winston.info('attach to a pending screenshot job #%s', pendingJobs[image].id);
+
+          // just attach to the pending jobs
+          attachListenerTo(pendingJobs[image]);
+
+        } else {
+
+          winston.info("create a new job");
+
+          // Create a new job and attach to it.
+          var job = jobs.create('screenshot', { title : url, id : image , options : options } ).save();
+          pendingJobs[image] = job;
+          attachListenerTo(job);
+
         }
-      );
+
+      }
+
+
     } catch ( error ){
       winston.info ( '' + error );
       res.writeHead(503);

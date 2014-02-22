@@ -11,33 +11,24 @@ var CacheService = function( config ) {
 
   // Should the cache be reloaded?
   if ( config.reload ) {
-    winston.debug('Reload cached from filesystem');
+    winston.info('Reload cache from filesystem');
     var files = fs.readdirSync(config.folder);
     files.forEach(function(id){
-      this.storeFile(id);
+      this.addFile(id);
     }.bind(this));
   }
 };
 
-CacheService.prototype.getCachedOrCreate = function ( fileId, serveCallback, createCallback ) {
-  if (!!this.files[fileId]){
-    winston.info('Serve file "%s" from cache', fileId);
-    serveCallback(fs.createReadStream(this.config.folder + '/' + fileId));
-  } else {
-    createCallback( function ( stream ){
-      this.storeFile ( fileId, stream );
-      serveCallback(stream);
-    }.bind(this));
-  }
+CacheService.prototype.hasFile = function(fileId){
+  return !!this.files[fileId];
 };
 
-CacheService.prototype.storeFile = function( fileId, stream ) {
-  if (!!this.files[fileId]) {
-    return;
-  }
+CacheService.prototype.getFile = function(fileId){
+  return fs.createReadStream(this.config.folder + '/' + fileId);
+};
 
-  if ( stream )
-    stream.pipe(fs.createWriteStream(this.config.folder + '/' + fileId));
+CacheService.prototype.addFile = function( fileId ) {
+  if ( this.hasFile(fileId) ) return;
 
   this.files[fileId] = true;
 
@@ -52,14 +43,16 @@ CacheService.prototype.storeFile = function( fileId, stream ) {
 };
 
 CacheService.prototype.removeFile = function( fileId ) {
-  if (!this.files[fileId]) {
-    return;
-  }
+  if (!this.hasFile(fileId)) return;
+
   delete this.files[fileId];
+
   try {
+
     fs.unlinkSync(this.config.folder + '/' + fileId);
+
   } catch(e) {
-    console.error(e);
+    winston.info(e);
   }
 };
 

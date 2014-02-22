@@ -1,4 +1,4 @@
 node_modules
-tmp
-config/runtime.json
+cache
+runtime.json
 runtime.log

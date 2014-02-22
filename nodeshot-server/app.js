@@ -1,23 +1,20 @@
-var express       = require('express'),
+var CacheService  = require('./lib/CacheService.js'),
 
-    request       = require('request'),
+    express       = require('express'),
     config        = require('config'),
 
     winston       = require('winston'),
+    kue           = require('kue');
 
-    CacheService  = require('./lib/CacheService.js'),
-    ScreenshotApi = require('./lib/ScreenshotApi.js');
 
+var cacheService  = new CacheService(config.cache),
+    jobs          = kue.createQueue(),
+    app           = express();
 
 if ( !!config.logging )
   winston.add(winston.transports.File, config.logging );
 
-winston.info("--- Starting ---");
-
-var cacheService  = new CacheService(config.cacheService);
-var screenshotApi = new ScreenshotApi(config.screenshot);
-
-var app = express();
+winston.info("--- Starting Server ---");
 
 // Basic configuration
 if (config.server.cors){
@@ -27,16 +24,22 @@ if (config.server.cors){
       res.header('Access-Control-Allow-Headers', 'Content-Type');
 
       next();
-
   });
+}
+
+// Add kue
+if ( config.server.kue.show ){
+  app.use('/kue', express.basicAuth(config.server.kue.username, config.server.kue.password));
+  app.use('/kue', kue.app);
 }
 
 app.use(app.router);
 
 // Require the main route
-require('./routes/index.js')(app, config, screenshotApi, cacheService);
+require('./routes/index.js')(app, config, cacheService);
 require('./routes/options.js')(app, config);
 
 // Start application
 app.listen(config.server.port);
+
 winston.info('Server running on port %d', config.server.port);
