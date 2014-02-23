@@ -3,9 +3,7 @@
 A simple screenshot web service powered by [Kue](https://github.com/LearnBoost/kue), [Express](http://expressjs.com) and [node-webkit](https://github.com/rogerwang/node-webkit).
 Inspired by [fzaninotto/screenshot-as-a-service](https://github.com/fzaninotto/screenshot-as-a-service)
 
-This screenshot-service is using node-webkit which comes with a recent version of [CEF](https://code.google.com/p/chromiumembedded/)
-, an up to date wrapper of Chromium. In contrast to phantomjs node-webkit supports 3D CSS and WebGL and thus can produce
-better screenshots.
+This screenshot-service is using node-webkit which comes with a recent version of Chromium. In contrast to phantomjs node-webkit supports 3D CSS and WebGL and therefore can produce better screenshots.
 
 ## Example
 
@@ -14,7 +12,7 @@ See this [DEMO](http://s.codepen.io/FWeinb/fullpage/mELoj) (Be aware that it is 
 ## Requirements
 
   1. [node-webkit](https://github.com/rogerwang/node-webkit) in `PATH`
-  2. [node-js](http://nodejs.org)
+  2. [node](http://nodejs.org)
   3. [redis](http://redis.io)
 
 ## Things you should know
@@ -23,10 +21,12 @@ On OS X the node-webkit executable is called `node-webkit` and on linux and Wind
 ## Running
 
   1. `git clone https://github.com/FWeinb/noteshot.git && cd noteshot`
-  2. `npm install` in `noteshot-renderer` and in `noteshot-server`
-  3. Run `./start.sh` in the `noteshot-renderer` folder
-  4. Run `node app.js` in the `notehsot-server` folder
-  4. Open `http://localhost:8080/?url=http://s.codepen.io/FWeinb/fullpage/oyACz`
+  2. Bootstrap the project `./bootstrap.sh`
+  3. Start/Install [redis](http://redis.io)
+  4. Run `./start.sh server` once
+  5. Run `./start.sh renderer X` where `X` is is the number/name of the renderer. (You can start more than one)
+  6. Open `http://localhost:8080/?url=http://s.codepen.io/FWeinb/fullpage/oyACz`
+  7. See `http://localhost:8080/kue` for queued jobs. (See the password in `nodeshot-server/config/default.yaml`.)
 
 ## API Usage
 
@@ -55,18 +55,14 @@ GET /?url=www.google.com&delay=1000
 # 1 second after it's loaded
 ```
 
-# !! OUTDATED !!
-
 ## Configuration
 
-This project is using [node-config](https://github.com/lorenwest/node-config) so you can find the config [here](/config/default.yaml)
+This project is using [node-config](https://github.com/lorenwest/node-config).
 
 ### Extended configuration
 
 [node-webkit](https://github.com/rogerwang/node-webkit) can pass startup flags to chromium via the `chromium-args` value
-in the `package.json`.
-See node-webkit [manifest-format](https://github.com/rogerwang/node-webkit/wiki/Manifest-format) for more information.
-
+in the `package.json`. See node-webkit [manifest-format](https://github.com/rogerwang/node-webkit/wiki/Manifest-format) for more information.
 
 ## Using a headless node-webkit via xvfb
 
@@ -75,7 +71,7 @@ DISCLAIMER: For WebGL/3D CSS support you need hardware acceleration. Keep that i
 ### Get a VM (optional)
 
   1. Go to `https://www.digitalocean.com/`
-  2. Create a $5 droplet
+  2. Create a $5 droplet with Ubuntu
   3. Login via `ssh`
 
 ### Installing xvfb
@@ -91,7 +87,14 @@ DISCLAIMER: For WebGL/3D CSS support you need hardware acceleration. Keep that i
 ### Installing node-webkit and screenshot-service
 
   1. Download [node-webkit](https://github.com/rogerwang/node-webkit) and put it on `PATH`
-  2. Get this repo `git clone https://github.com/fweinb/screenshot-service && cd screenshot-service`
-  3. Start `nodewebkit .`
+  2. Start/Install [redis](http://redis.io)
+  3. Get this repo `git clone https://github.com/fweinb/nodeshot && cd nodeshot`
+  4. Bootstrap the project `./bootstrap.sh`
+  5. Run `./start.sh server` once
+  6. Run `./start.sh renderer X` where `X` is is the number/name of the renderer. (You can start more than one)
+  7. Open `http://[IP]:8080/?url=http://s.codepen.io/FWeinb/fullpage/oyACz`
+
+# CAUTION
+Please change the default password in `nodeshot-server/config/default.yaml`
 
 
