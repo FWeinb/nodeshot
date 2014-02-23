@@ -78,13 +78,13 @@ module.exports = function (app, config, cacheService){
 
     // Issue a
     if (!req.query.url) {
-        res.writeHead(404); res.end('At least the URL query must be set.');
+        res.writeHead(404); res.end('At least the URL param must be set.');
         return;
     }
 
     var url = req.query.url;
 
-    // Assume http:// if nothing is specifiyed.
+    // Assume http:// if nothing is specified.
     if ( url.indexOf('http') === -1 ){
       url = 'http://' + url;
     }
@@ -111,7 +111,7 @@ module.exports = function (app, config, cacheService){
       // if there is one, answer with 200 OK instantly
       if  (!!responseUrl){
 
-        // Assume http:// if nothing is specifiyed.
+        // Assume http:// if nothing is specified.
         if ( responseUrl.indexOf('http') === -1 ){
           responseUrl = 'http://' + responseUrl;
         }
