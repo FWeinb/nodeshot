@@ -1,8 +1,3 @@
-logging: # These options are directly passed to winston
-  filename: "runtime.log"
-  level: "verbose" #npm style logging
-  handleExceptions: true
-  json: false
 screenshot:
   width: 1024
   maxwidth: 3000
@@ -24,6 +19,6 @@ server:
     username: 'default'
     password: 'default'
 cache:
-  folder:"../cache"
+  folder:"cache"
   reload:true
   ttl: 3600000
