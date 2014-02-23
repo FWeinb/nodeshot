@@ -1,13 +1,20 @@
-var fs      = require('fs'),
-    winston = require('winston');
+var fs        = require('fs'),
+    path      = require('path'),
+    winston   = require('winston');
+
+var cwd = process.cwd();
 
 var CacheService = function( config ) {
   this.config = config;
   this.files  = {};
 
+  var configFolder = path.resolve(cwd, config.folder);
+
   // Create the temp directory
-  if (!fs.existsSync(config.folder))
-    fs.mkdirSync(config.folder);
+  if (!fs.existsSync(configFolder))
+    fs.mkdirSync(configFolder);
+
+  winston.info('Cache folder "%s"', configFolder );
 
   // Should the cache be reloaded?
   if ( config.reload ) {
@@ -24,7 +31,7 @@ CacheService.prototype.hasFile = function(fileId){
 };
 
 CacheService.prototype.getFile = function(fileId){
-  return fs.createReadStream(this.config.folder + '/' + fileId);
+  return fs.createReadStream(path.resolve(cwd, this.config.folder, fileId));
 };
 
 CacheService.prototype.addFile = function( fileId ) {
@@ -49,7 +56,7 @@ CacheService.prototype.removeFile = function( fileId ) {
 
   try {
 
-    fs.unlinkSync(this.config.folder + '/' + fileId);
+    fs.unlinkSync(path.resolve(cwd, this.config.folder, fileId));
 
   } catch(e) {
     winston.info(e);
