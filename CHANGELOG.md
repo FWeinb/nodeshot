@@ -1,6 +1,15 @@
 Changelog
 -------
+
+## Nodeshot-renderer
+  * 0.3.1 Added a `globaltimeout` to cancel a job if it takes to long.
   * 0.3.0 Complete redesign. Using `kue` as a job queue. Seperated the express app from the `node-webkit` app.
+
+## Nodeshot-server
+  * 0.3.0 Complete redesign. Using `kue` as a job queue. Seperated the express app from the `node-webkit` app.
+
+
+## Old
   * 0.2.0 Rewrote the `ScrenshotApi.js` and added a `fullpage` flag.
   * 0.1.9 Fix a bug introduced in 0.1.7
   * 0.1.8 Add CORS middleware to enable cors for all routes.
