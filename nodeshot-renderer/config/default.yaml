@@ -4,4 +4,4 @@ screenshot:
   iframetimeout: 2000 # Time in ms, maximal time to wait for an iframe to load.
   showwindow: true
 cache:
-  folder: "cache"
+  folder: "../cache"
