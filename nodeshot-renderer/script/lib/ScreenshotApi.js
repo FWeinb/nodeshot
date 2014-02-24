@@ -37,6 +37,8 @@ var capture = function (nwwindow, options, job, callback){
  * Inject css and execute delay
  */
 var screenshot = function(nwwindow, window, options, job, config, callback ){
+
+
   // Remove scrollbar
   if ( !options.scrollbar ){
     job.log("Remove scrollbar");
@@ -132,6 +134,15 @@ ScreenshotApi.prototype.screenshot = function ( url, options, job, callback ){
         frameTimeout = setTimeout(function(){
           job.log("All frames loaded");
           job.progress(40, 100);
+
+
+          // If location.host is empty page not found
+          if (window.location.host === ''){
+            popWindow.close(true);
+            callback(new Error('Page "' + url + '" not found.'), null);
+            return;
+          }
+
           // Take a screenshot if no iFrames are loaded for more than this.config.iframetimeout
           screenshot(popWindow, popWindow.window, options, job, this.config, callback);
         }.bind(this), this.config.iframetimeout);
