@@ -136,8 +136,8 @@ ScreenshotApi.prototype.screenshot = function ( url, options, job, callback ){
           job.progress(40, 100);
 
 
-          // If location.host is empty page not found
-          if (window.location.host === ''){
+          // If popWindow.window.location.host is empty page not found
+          if (popWindow.window.location.host === ''){
             popWindow.close(true);
             callback(new Error('Page "' + url + '" not found.'), null);
             return;
