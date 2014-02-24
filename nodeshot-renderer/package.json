@@ -2,7 +2,7 @@
   "name": "noteshot-renderer",
   "author": "Fabrice Weinberg <Fabrice@weinberg.me>",
   "description": "Website screenshot service powered by node-webkit",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "main": "index.html",
   "keywords": [
     "node-webkit",

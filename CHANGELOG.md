@@ -2,11 +2,13 @@ Changelog
 -------
 
 ## Nodeshot-renderer
+  * 0.3.3 Detect if page exists.
   * 0.3.2 Fixed bug resolving the cache folder
   * 0.3.1 Added a `globaltimeout` to cancel a job if it takes to long.
   * 0.3.0 Complete redesign. Using `kue` as a job queue. Seperated the express app from the `node-webkit` app.
 
 ## Nodeshot-server
+  * 0.3.2 Added a `ajax` route.
   * 0.3.1 Remove a pendingJob if it has failed.
   * 0.3.0 Complete redesign. Using `kue` as a job queue. Seperated the express app from the `node-webkit` app.
 
