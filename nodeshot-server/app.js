@@ -17,6 +17,7 @@ if ( !!config.logging )
 winston.info("--- Starting Server ---");
 
 // Basic configuration
+
 if (config.server.cors){
   app.use(function(req, res, next) {
       res.header('Access-Control-Allow-Origin', '*');
@@ -35,8 +36,22 @@ if ( config.server.kue.show ){
 
 app.use(app.router);
 
+// Handle errors
+app.use(function(err, req, res, next){
+
+  winston.info(err);
+
+  res.send(500, JSON.stringify({
+    request : 'failed',
+    reason : ''+err
+  }));
+});
+
+// Hacky. This will hold job objects that are currently running.
+var pendingJobs = {};
+
 // Require the main route
-require('./routes/index.js')(app, config, cacheService);
+require('./routes/index.js')(app, config, pendingJobs, cacheService);
 require('./routes/options.js')(app, config);
 
 // Start application
