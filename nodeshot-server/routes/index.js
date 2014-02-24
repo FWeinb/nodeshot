@@ -152,9 +152,12 @@ module.exports = function (app, config, cacheService){
           });
 
           job.on('failed', function(error){
-           winston.info('' + error);
-           res.writeHead(503);
-           res.end(''+error);
+            // remove from pending job list.
+            delete pendingJobs[image];
+
+            winston.info('' + error);
+            res.writeHead(503);
+            res.end(''+error);
           });
         };
 

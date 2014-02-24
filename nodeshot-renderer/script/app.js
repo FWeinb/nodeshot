@@ -11,10 +11,10 @@ var ScreenshotApi = require('./lib/ScreenshotApi.js'),
 
 var cwd = process.cwd();
 
-var configFolder = path.resolve(cwd, config.folder);
-// Create the temp directory
-if (!fs.existsSync(configFolder)){
-  winston.info('"%s" folder not found. Make sure the server configuration is correct.', configFolder);
+var cacheFolder = path.resolve(cwd, config.cache.folder);
+// Warn if cache folder dosn't exist
+if (!fs.existsSync(cacheFolder)){
+  winston.info('"%s" folder not found. Make sure the server configuration is correct.', cacheFolder);
 }
 
 
@@ -50,7 +50,7 @@ jobs.process('screenshot', function(job, done){
         job.log('Cache Request ' + job.data.id);
         job.log('Done');
 
-        stream.pipe(fs.createWriteStream(path.resolve(cwd, config.cache.folder, job.data.id)));
+        stream.pipe(fs.createWriteStream(path.resolve(cacheFolder, job.data.id)));
         done();
 
       }
