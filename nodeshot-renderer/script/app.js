@@ -42,8 +42,7 @@ jobs.process('screenshot', function(job, done){
 
       if ( err ){
 
-        job.log( '' + err );
-        done ( err );
+        done ( '' + err );
 
       } else {
 
@@ -56,7 +55,6 @@ jobs.process('screenshot', function(job, done){
       }
     });
   } catch ( err ){
-    job.log( '' + err );
-    done ( err );
+    done ( '' + err );
   }
 });
