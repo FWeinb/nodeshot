@@ -12,6 +12,7 @@ screenshot:
   scrollbar: false
   fullpage: false
 server:
+  domain:"http://localhost"
   port: 8080
   cors: true
   kue:
