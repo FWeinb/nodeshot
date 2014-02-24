@@ -41,8 +41,8 @@ app.use(function(err, req, res, next){
 
   winston.info(err);
 
-  res.writeHead(200, {"Content-Type" : "application/json"});
-  res.send(500, JSON.stringify({
+  res.writeHead(500, {"Content-Type" : "application/json"});
+  res.send(JSON.stringify({
     request : 'failed',
     reason : ''+err
   }));
