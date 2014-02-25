@@ -30,10 +30,18 @@ On OS X the node-webkit executable is called `node-webkit` and on linux and Wind
 
 ## API Usage
 
+### Simple API
+
+The result of each request will be the requested image.
+
 ```
 # Take a screenshot
 GET /?url=www.google.com
 # Return a 1024x600 PNG screenshot of the www.google.com homepage
+
+# Take a screenshot as jpeg
+GET /?url=www.google.com&format=jpeg
+# Return a 1024x600 JPEG screenshot of the www.google.com homepage
 
 # Take a screenshot of the whole page
 GET /?url=www.google.com&fullpage=true
@@ -43,16 +51,25 @@ GET /?url=www.google.com&fullpage=true
 GET /?url=www.google.com&width=800&height=600
 # Return a 800x600 PNG screenshot of the www.google.com homepage
 
-# Asynchronous call
-GET /?url=www.google.com&callback=http://www.myservice.com/screenshot/google
-# Return an empty response immediately (HTTP 200 OK),
-# then send a POST request to the callback URL when the screenshot is ready
-# with the PNG image in the body.
-
 # Screenshot delay
 GET /?url=www.google.com&delay=1000
 # Return a 1024x600 PNG screenshot of the www.google.com homepage
 # 1 second after it's loaded
+```
+
+
+### Ajax API
+
+The result of each request will be an JSON object.
+
+Same options as in the Simple API. Just prefix the request with `/ajax/`
+
+Example:
+```
+# Take a screenshot
+GET /ajax/?url=www.google.com
+# Success: 200 {"request" : "success", "url" : "[URL to resulting image]"}
+# Error: 500 {"request" : "failed", "reason" : "[Message]"}
 ```
 
 ## Configuration
