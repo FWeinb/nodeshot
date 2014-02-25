@@ -1,4 +1,4 @@
-# Screenshot as a Service
+<img height="300" src="http://nodeshot.it/logo/nodeshot-big.png">
 
 A simple screenshot web service powered by [Kue](https://github.com/LearnBoost/kue), [Express](http://expressjs.com) and [node-webkit](https://github.com/rogerwang/node-webkit).
 Inspired by [fzaninotto/screenshot-as-a-service](https://github.com/fzaninotto/screenshot-as-a-service)
@@ -64,6 +64,10 @@ This project is using [node-config](https://github.com/lorenwest/node-config).
 [node-webkit](https://github.com/rogerwang/node-webkit) can pass startup flags to chromium via the `chromium-args` value
 in the `package.json`. See node-webkit [manifest-format](https://github.com/rogerwang/node-webkit/wiki/Manifest-format) for more information.
 
+
+## CAUTION
+Please change the default password in `nodeshot-server/config/default.yaml`
+
 ## Using a headless node-webkit via xvfb
 
 DISCLAIMER: For WebGL/3D CSS support you need hardware acceleration. Keep that in mind!
@@ -94,7 +98,6 @@ DISCLAIMER: For WebGL/3D CSS support you need hardware acceleration. Keep that i
   6. Run `./start.sh renderer X` where `X` is is the number/name of the renderer. (You can start more than one)
   7. Open `http://[IP]:8080/?url=http://s.codepen.io/FWeinb/fullpage/oyACz`
 
-# CAUTION
-Please change the default password in `nodeshot-server/config/default.yaml`
-
+## Credits
+Logo by [Joshua Hibbert](https://twitter.com/_joshnh)
 
