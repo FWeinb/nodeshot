@@ -115,6 +115,6 @@ DISCLAIMER: For WebGL/3D CSS support you need hardware acceleration. Keep that i
   6. Run `./start.sh renderer X` where `X` is is the number/name of the renderer. (You can start more than one)
   7. Open `http://[IP]:8080/?url=http://s.codepen.io/FWeinb/fullpage/oyACz`
 
-## Credits
-Logo by [Joshua Hibbert](https://twitter.com/_joshnh)
+## Thanks to
+[Joshua Hibbert](https://twitter.com/_joshnh) for creating the logo.
 
