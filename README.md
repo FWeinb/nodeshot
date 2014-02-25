@@ -1,4 +1,4 @@
-<img height="300" src="http://nodeshot.it/logo/nodeshot-big.png">
+<img src="http://nodeshot.it/logo/nodeshot-big.png">
 
 A simple screenshot web service powered by [Kue](https://github.com/LearnBoost/kue), [Express](http://expressjs.com) and [node-webkit](https://github.com/rogerwang/node-webkit).
 Inspired by [fzaninotto/screenshot-as-a-service](https://github.com/fzaninotto/screenshot-as-a-service)
