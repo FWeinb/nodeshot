@@ -3,5 +3,6 @@ screenshot:
   timeout: 10000 # Time in ms, maximal time to wait until the main page is fully loaded
   iframetimeout: 2000 # Time in ms, maximal time to wait for an iframe to load.
   showwindow: true
+  maxheight: 0
 cache:
   folder: "../cache"

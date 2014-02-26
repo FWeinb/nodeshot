@@ -65,8 +65,14 @@ var screenshot = function(nwwindow, window, options, job, config, callback ){
       try{
 
         nwwindow.on('resize', function(width, height){
+          // Limit the height to maxheight
+          if ( config.maxheight > 0 ) {
+            height = Math.min(height, config.maxheight);
+          }
+
           job.log("Resized: %dx%d", width, height);
           job.progress(90, 100);
+
           winston.info('Resized: %dx%d', width, height);
           setTimeout(function(){
             capture ( nwwindow, options, job, callback );
@@ -107,6 +113,10 @@ var screenshot = function(nwwindow, window, options, job, config, callback ){
  *
  */
 ScreenshotApi.prototype.screenshot = function ( url, options, job, callback ){
+
+  if ( config.maxheight > 0 ) {
+    options.height = Math.min(options.height, config.maxheight);
+  }
 
   options.show = this.config.showwindow; // Hide the window if we aren't running in headless mode.
   options.nodejs = false;                // Disable nodejs for the new window.
