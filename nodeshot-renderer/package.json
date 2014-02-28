@@ -17,7 +17,6 @@
   "single-instance" : false,
   "dependencies": {
     "winston": "~0.7.2",
-    "base64-stream": "~0.1.2",
     "kue": "~0.7.5",
     "config": "~0.4.35",
     "yaml": "~0.2.3"

@@ -1,6 +1,6 @@
 var gui           = nwrequire('nw.gui'), // Require NW module
     winston       = require('winston'),
-    base64decode  = require('base64-stream').decode,
+    stream        = require("stream"),
     fs            = require('fs');
 
 // Reference of the MainWindow
@@ -18,10 +18,12 @@ var capture = function (nwwindow, options, job, callback){
 
   job.log('Capture');
    // Capture!
+   var timeCapture = new Date();
    nwwindow.capturePage(function(img) {
-     var stream = base64decode();
-         stream.write(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
-         stream.end();
+    job.log('Capturing took: %dms',  (new Date() ) - timeCapture );
+    var bufferStream = new stream.Transform();
+        bufferStream.push(new Buffer(img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""), "base64"));
+        bufferStream.end();
 
      job.log('Close Window');
      job.progress(100, 100);
@@ -29,7 +31,7 @@ var capture = function (nwwindow, options, job, callback){
      nwwindow.close(true);
 
      // Execute callback
-     callback(null, stream);
+     callback(null, bufferStream);
   }, options.format);
 };
 
@@ -114,8 +116,8 @@ var screenshot = function(nwwindow, window, options, job, config, callback ){
  */
 ScreenshotApi.prototype.screenshot = function ( url, options, job, callback ){
 
-  if ( config.maxheight > 0 ) {
-    options.height = Math.min(options.height, config.maxheight);
+  if ( this.config.maxheight > 0 ) {
+    options.height = Math.min(options.height, this.config.maxheight);
   }
 
   options.show = this.config.showwindow; // Hide the window if we aren't running in headless mode.
@@ -142,19 +144,24 @@ ScreenshotApi.prototype.screenshot = function ( url, options, job, callback ){
 
         // Restart the frameTimeout again fort his frame.
         frameTimeout = setTimeout(function(){
-          job.log("All frames loaded");
-          job.progress(40, 100);
+          try{
 
+            job.log("All frames loaded");
+            job.progress(40, 100);
 
-          // If popWindow.window.location.host is empty page not found
-          if (popWindow.window.location.host === ''){
-            popWindow.close(true);
-            callback(new Error('Page "' + url + '" not found.'), null);
-            return;
+            // If popWindow.window.location.host is empty page not found
+            if (popWindow.window.location.host === ''){
+              popWindow.close(true);
+              callback(new Error('Page "' + url + '" not found.'), null);
+              return;
+            }
+
+            // Take a screenshot if no iFrames are loaded for more than this.config.iframetimeout
+            screenshot(popWindow, popWindow.window, options, job, this.config, callback);
+          } catch ( e ) {
+            // Handle any error.
+            callback( e, null );
           }
-
-          // Take a screenshot if no iFrames are loaded for more than this.config.iframetimeout
-          screenshot(popWindow, popWindow.window, options, job, this.config, callback);
         }.bind(this), this.config.iframetimeout);
     }.bind(this));
 
