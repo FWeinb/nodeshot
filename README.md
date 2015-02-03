@@ -7,7 +7,7 @@ This screenshot-service is using node-webkit which comes with a recent version o
 
 ## Example
 
-See this [DEMO](http://nodeshot.it) (Be aware that it is running on a $5 digitalocean machine. Be patient!)
+~~See this [DEMO](http://nodeshot.it) (Be aware that it is running on a $5 digitalocean machine. Be patient!)~~
 
 ## Requirements
 
