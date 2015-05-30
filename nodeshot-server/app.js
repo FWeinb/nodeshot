@@ -8,7 +8,6 @@ var CacheService  = require('./lib/CacheService.js'),
 
 
 var cacheService  = new CacheService(config.cache),
-    jobs          = kue.createQueue(),
     app           = express();
 
 if ( !!config.logging )

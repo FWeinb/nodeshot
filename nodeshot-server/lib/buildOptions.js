@@ -3,7 +3,7 @@
  * Build an options object from the request query.
  */
 var numOptions  = ['width', 'height', 'delay'],
-    boolOptions = ['fullpage', 'scrollbar', 'force'],
+    boolOptions = ['page', 'scrollbar', 'transparent', 'force'],
     strOptions  = ['format', 'callback'];
 
 var buildOptions = function(query, defaults){
@@ -50,7 +50,7 @@ var buildOptions = function(query, defaults){
   // Merge in defaults
   options.format    = options.format    || defaults.format;
   options.scrollbar = options.scrollbar || defaults.scrollbar;
-  options.fullpage  = options.fullpage  || defaults.fullpage;
+  options.page      = options.page      || defaults.page;
   options.delay     = options.delay     || defaults.delay;
   options.width     = options.width     || defaults.width;
   options.height    = options.height    || defaults.height;

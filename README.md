@@ -39,12 +39,12 @@ The result of each request will be the requested image.
 GET /?url=www.google.com
 # Return a 1024x600 PNG screenshot of the www.google.com homepage
 
-# Take a screenshot as jpeg
-GET /?url=www.google.com&format=jpeg
-# Return a 1024x600 JPEG screenshot of the www.google.com homepage
+# Take a screenshot with transparency
+GET /?url=www.google.com&transparent=true
+# Return a 1024x600 PNG screenshot of the www.google.com homepage
 
 # Take a screenshot of the whole page
-GET /?url=www.google.com&fullpage=true
+GET /?url=www.google.com&page=true
 # Return a screenshot of the whole www.google.com homepage
 
 # Custom viewport size

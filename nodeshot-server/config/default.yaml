@@ -5,12 +5,13 @@ screenshot:
   maxheight: 3000
   format: "png" # default format
   allowedformat: # allowed formate
-    - 'jpeg'
     - 'png'
   delay: 0
   maxdelay: 10000
   scrollbar: false
-  fullpage: false
+  page: false
+  transparent: false
+  css: ""
 server:
   domain:"http://localhost"
   port: 8080

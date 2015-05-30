@@ -5,4 +5,4 @@ screenshot:
   showwindow: true
   maxheight: 0
 cache:
-  folder: "../cache"
+  folder: "cache"

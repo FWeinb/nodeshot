@@ -3,23 +3,12 @@
   "author": "Fabrice Weinberg <Fabrice@weinberg.me>",
   "description": "Website screenshot service powered by node-webkit",
   "version": "0.3.3",
-  "main": "index.html",
-  "keywords": [
-    "node-webkit",
-    "screenshot",
-    "service",
-    "chromium",
-    "webkit"
-  ],
-  "window": {
-    "show": true
-  },
-  "single-instance" : false,
+  "main": "script/app.js",
   "dependencies": {
-    "winston": "~0.7.2",
-    "kue": "~0.7.5",
-    "config": "~0.4.35",
-    "yaml": "~0.2.3"
+    "winston": "^0.7.2",
+    "kue": "^0.9.0",
+    "config": "^0.4.35",
+    "yaml": "^0.2.3"
   },
   "license": "MIT"
 }

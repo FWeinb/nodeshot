@@ -1,8 +1,3 @@
-nw="nw"
-if [ "$(uname)" == "Darwin" ]; then
-  nw="node-webkit"
-fi
-
 mkdir -p logs
 
 case "$1" in
@@ -12,8 +7,7 @@ case "$1" in
     ;;
   renderer)
     echo "Start Renderer"
-    export NODE_CONFIG_DIR='config'
-    nohup $nw nodeshot-renderer &> logs/renderer-$2.log &
+    nohup node nodeshot-renderer --NODE_CONFIG_DIR="./nodeshot-renderer/config"  &> logs/renderer-$2.log &
     ;;
   *)
     echo "Usage: start.sh {server|renderer name}"
