@@ -1,6 +1,6 @@
-<img src="http://nodeshot.it/assets/logo/nodeshot-big.png">
+<img src="http://blog.weinberg.me/nodeshot-website/assets/logo/nodeshot-big.png">
 
-A simple screenshot web service powered by [Kue](https://github.com/LearnBoost/kue), [Express](http://expressjs.com) and [node-webkit](https://github.com/rogerwang/node-webkit).
+A simple screenshot web service powered by [Kue](https://github.com/LearnBoost/kue), [Express](http://expressjs.com) and [electron](electron.atom.io).
 Inspired by [fzaninotto/screenshot-as-a-service](https://github.com/fzaninotto/screenshot-as-a-service)
 
 This screenshot-service is using node-webkit which comes with a recent version of Chromium. In contrast to phantomjs node-webkit supports 3D CSS and WebGL and therefore can produce better screenshots.
