@@ -20,7 +20,7 @@ On OS X the node-webkit executable is called `node-webkit` and on linux and Wind
 
 ## Running
 
-  1. `git clone https://github.com/FWeinb/noteshot.git && cd noteshot`
+  1. `git clone https://github.com/FWeinb/nodeshot.git && cd nodeshot`
   2. Bootstrap the project `./bootstrap.sh`
   3. Start/Install [redis](http://redis.io)
   4. Run `./start.sh server` once
