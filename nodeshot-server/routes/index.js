@@ -38,8 +38,8 @@ module.exports = function (app, config, pendingJobs, cacheService){
         winston.info('Request "%s", cacheId: "%s"', url, imageId, optionStr);
 
 
-        // &force will invalidate the cache
-        if ( options.force ){
+        // append `&forceReload=1` to query to invalidate the cache and get a new image
+        if ( options.forceReload ){
           winston.info('Remove "%s" from cache', imageId);
           cacheService.removeFile(imageId);
         }

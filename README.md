@@ -34,28 +34,34 @@ On OS X the node-webkit executable is called `node-webkit` and on linux and Wind
 
 The result of each request will be the requested image.
 
-```
-# Take a screenshot
-GET /?url=www.google.com
-# Return a 1024x600 PNG screenshot of the www.google.com homepage
+##### Take a screenshot 
+`GET /?url=www.google.com`
 
-# Take a screenshot with transparency
-GET /?url=www.google.com&transparent=true
-# Return a 1024x600 PNG screenshot of the www.google.com homepage
+Returns a 1024x600 PNG screenshot of the www.google.com homepage
+##### Take a screenshot with transparency
+`GET /?url=www.google.com&transparent=true`
 
-# Take a screenshot of the whole page
-GET /?url=www.google.com&page=true
-# Return a screenshot of the whole www.google.com homepage
+Returns a 1024x600 PNG screenshot of the www.google.com homepage
 
-# Custom viewport size
-GET /?url=www.google.com&width=800&height=600
-# Return a 800x600 PNG screenshot of the www.google.com homepage
+##### Take a screenshot of the whole page
+`GET /?url=www.google.com&page=true`
 
-# Screenshot delay
-GET /?url=www.google.com&delay=1000
-# Return a 1024x600 PNG screenshot of the www.google.com homepage
-# 1 second after it's loaded
-```
+Returns a screenshot of the whole www.google.com homepage
+
+##### Custom viewport size
+`GET /?url=www.google.com&width=800&height=600`
+
+Returns a 800x600 PNG screenshot of the www.google.com homepage
+
+##### Screenshot delay
+`GET /?url=www.google.com&delay=1000`
+
+Returns a 1024x600 PNG screenshot of the www.google.com homepage 1 second after it's loaded
+
+##### Force cache reload
+`GET /?url=www.google.com&forceReload=1`
+
+Deletes current version in cache and returns a (new) 1024x600 PNG screenshot of the www.google.com homepage, which will be cached again
 
 
 ### Ajax API
