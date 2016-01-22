@@ -3,7 +3,7 @@
  * Build an options object from the request query.
  */
 var numOptions  = ['width', 'height', 'delay'],
-    boolOptions = ['page', 'scrollbar', 'transparent', 'force'],
+    boolOptions = ['page', 'scrollbar', 'transparent', 'forceReload'],
     strOptions  = ['format', 'callback'];
 
 var buildOptions = function(query, defaults){
