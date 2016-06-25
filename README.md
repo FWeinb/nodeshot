@@ -1,4 +1,4 @@
-<img src="http://blog.weinberg.me/nodeshot-website/assets/logo/nodeshot-big.png">
+> ⚠️ This is no longer maintained ⚠️ 
 
 A simple screenshot web service powered by [Kue](https://github.com/LearnBoost/kue), [Express](http://expressjs.com) and [electron](electron.atom.io).
 Inspired by [fzaninotto/screenshot-as-a-service](https://github.com/fzaninotto/screenshot-as-a-service)
